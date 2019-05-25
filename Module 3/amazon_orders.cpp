@@ -67,6 +67,10 @@ void process(order_record &);
 void input(ifstream & in, order_record & p_record) // example using the call by reference mechanism in C++ -- call record is passed by reference --note & operator
 {
 	in >> p_record.cell_number;
+	in >> p_record.item_number;
+	in >> p_record.quantity;
+	in >> p_record.price;
+	in >> p_record.processing_plant;
 	//add more code to read the rest of the fields (item_number, quantity, price and processing_plant) into the 
 	//order record, p_record.
 }
@@ -86,8 +90,15 @@ void output(const order_record & p_record)
 	cout.setf(ios::fixed);
 	/********************************************/
 
-
-	//cout << p_record.cell_number << "\t";
+	cout << p_record.cell_number << "\t";
+	cout << p_record.item_number << "\t";
+	cout << p_record.quantity << "\t";
+	cout << p_record.price << "\t";
+	cout << p_record.processing_plant << "\t";
+	cout << p_record.tax_rate << "\t";
+	cout << p_record.order_tax << "\t";
+	cout << p_record.net_cost << "\t";
+	cout << p_record.total_cost << endl;
 	//add more code to print all the fields in the order record
 	
 
@@ -106,7 +117,14 @@ void process(order_record & p_record)
 
 	//put your code here to process/calculate the tax_rate, order_tax, net_cost, and total_cost
 	//the p_record
-
+	if (0<=p_record.processing_plant && p_record.processing_plant <=50){p_record.tax_rate = .06;}
+	else if (50<p_record.processing_plant && p_record.processing_plant <=110){p_record.tax_rate = .07;}
+	else if (110<p_record.processing_plant && p_record.processing_plant <=200){p_record.tax_rate = .08;}
+	else if (200<p_record.processing_plant && p_record.processing_plant <=500){p_record.tax_rate = .09;}
+	else p_record.tax_rate = .11;
+	p_record.order_tax = p_record.quantity * p_record.price * p_record.tax_rate;
+	p_record.net_cost = p_record.quantity * p_record.price;
+	p_record.total_cost = p_record.net_cost + p_record.order_tax;
 }
 
 //Here is your driver to test the program
@@ -127,8 +145,8 @@ int main()
 		while (!in.eof())
 		{
 			input(in, customer_record);
-			//process(customer_record);
-			//output(customer_record);
+			process(customer_record);
+			output(customer_record);
 		}
 	}
 
